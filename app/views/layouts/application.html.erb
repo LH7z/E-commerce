@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>E-commerce</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  </head>
+
+  <body>
+        <div class="side-bar" id="side-bar">
+          <%if current_user %>
+            <%= button_to "Sair", destroy_user_session_path, method: :delete %>
+            <% if current_user.admin? %>
+              <%= link_to "Adicionar Produto", new_product_path %>
+            <% end %>
+          <% else %>
+            <div style="display: flex; gap: 10px;">
+              <%= link_to "Entrar", new_user_session_path %> |  <%= link_to "Registrar", new_user_registration_path %>
+            </div>
+          <% end %>
+          <%= link_to "Produtos", products_path %>
+          <%= link_to "Carrinho", cart_path %>
+          <%= link_to "Pedidos", orders_path %>
+
+        </div>
+      <nav>
+        <div>
+          <a href="/"><img src="<%= image_path('logo.avif') %>" alt="Logo da Loja" class="logo"></a>
+        </div>
+        <button class="menu-btn" onclick="toggleSideBar()">☰ Menu</button>
+      </nav>
+      <% if flash[:alert] %>
+        <div style="background:#ffe0e0; padding:10px; color:#900; margin-bottom:10px;">
+          <%= flash[:alert] %>
+        </div>
+      <% end %>
+
+      <% if flash[:notice] %>
+        <div style="background:#e0ffe0; padding:10px; color:#060; margin-bottom:10px;">
+          <%= flash[:notice] %>
+        </div>
+      <% end %>
+    <div class="container">
+      <%= yield %>
+    </div>
+    <script>
+      function toggleSideBar() {
+        var sideBar = document.getElementById("side-bar");
+        if (sideBar.classList.contains("active")) {
+          sideBar.classList.remove("active");
+        } else {
+          sideBar.classList.add("active");
+        }
+      }
+    </script>
+  </body>
+</html>

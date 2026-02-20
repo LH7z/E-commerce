@@ -1,0 +1,40 @@
+<div class="product-card" style="margin-top: 20px;width: 50%;">
+  <h1>Criar Produto</h1>
+  <%= form_with(model: @product, local: true) do |form| %>
+    <% if @product.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@product.errors.count, "error") %> proibiu este produto de ser salvo:</h2>
+        <ul>
+          <% @product.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="parent">
+      <div class="div1">
+        <%= form.label :nome , style: "font-weight: bold;"%>
+        <%= form.text_field :name %>
+      </div>
+
+      <div class="div2">
+        <%= form.label :preço, style: "font-weight: bold;" %>
+        <%= form.number_field :price, step: 0.10 %>
+      </div>
+      <div class="div6">
+        <%= form.label :disconto, style: "font-weight: bold;" %>
+        <%= form.number_field :discount, step: 1.0, min: 0, max: 100 %>
+      </div>
+
+      <div class="div1">
+        <%= form.label :imagem, style: "font-weight: bold;" %>
+        <%= form.file_field :image %>
+      </div>
+      <div class="actions">
+        <%= form.submit "Criar Produto", style: "background-color: #28a745; color: white; padding: 10px 15px; border-radius: 5px; margin: 0 0 5px 0;box-shadow: 0 2px 4px rgba(0,0,0,0.3);border-color:transparent;width: 25%;" %>
+      </div>
+    </div>
+  <% end %>
+
+
+</div>

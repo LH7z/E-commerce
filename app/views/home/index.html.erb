@@ -1,0 +1,134 @@
+<section class="hero hero-banner">
+  <div class="hero-content">
+    <h1>Estilo que fala por você</h1>
+    <p>
+      Peças modernas, minimalistas e pensadas para quem valoriza design,
+      conforto e identidade.
+    </p>
+
+    <div class="hero-actions">
+      <a href="/products" class="btn-primary">Ver coleção</a>
+      <a href="/products?discount=true" class="btn-outline">Ofertas</a>
+    </div>
+  </div>
+</section>
+
+<h2 class="texto-h1" style="margin: 20px 0;">🔥 Produtos em desconto</h2>
+  <div class="carousel" id="discount-carousel">
+    <div class="carousel-track">
+      <% @discounted_products.each do |product| %>
+        <div class="carousel-card">
+          <a href="/products/<%= product.id %>">
+            <% if product.image.attached? %>
+              <%= image_tag product.image %>
+            <% end %>
+
+            <h4><%= product.name %></h4>
+
+            <p class="old-price">
+              <%= number_to_currency(product.price, unit: "R$ ") %>
+            </p>
+
+            <p class="new-price">
+              <%= number_to_currency(product.discounted_price_cents / 100.0, unit: "R$ ") %>
+            </p>
+          </a>
+        </div>
+      <% end %>
+
+      <%# duplica para efeito infinito %>
+      <% @discounted_products.each do |product| %>
+        <div class="carousel-card">
+          <a href="/products/<%= product.id %>">
+            <% if product.image.attached? %>
+              <%= image_tag product.image %>
+            <% end %>
+
+            <h4><%= product.name %></h4>
+
+            <p class="old-price">
+              <%= number_to_currency(product.price, unit: "R$ ") %>
+            </p>
+
+            <p class="new-price">
+              <%= number_to_currency(product.discounted_price_cents / 100.0, unit: "R$ ") %>
+            </p>
+          </a>
+        </div>
+      <% end %>
+      <% @discounted_products.each do |product| %>
+        <div class="carousel-card">
+          <% if product.image.attached? %>
+            <%= image_tag product.image %>
+          <% end %>
+
+          <h4><%= product.name %></h4>
+
+          <p class="old-price">
+            <%= number_to_currency(product.price, unit: "R$ ") %>
+          </p>
+
+          <p class="new-price">
+            <%= number_to_currency(product.discounted_price_cents / 100.0, unit: "R$ ") %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div id="ultimos-lancamentos">
+    <h2 class="texto-h1 div3" style="margin: 20px 0;">✨ Últimos Lançamentos</h2>
+    <div class="products-grid">
+      <% @latest_products.each do |product| %>
+        <div class="product-card">
+          <a href="/products/<%= product.id %>">
+
+            <% if product.image.attached? %>
+              <%= image_tag product.image %>
+            <% end %>
+
+            <h4><%= product.name %></h4>
+            <% if product.discount > 0 %>
+              <p style="text-decoration: line-through;"><%= number_to_currency(product.price, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></p>
+              <p style="color: #28a745;font-weight: bold;"><%= number_to_currency(product.discounted_price_cents / 100.0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></p>
+            <% else %>
+              <p><%= number_to_currency(product.price, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></p>
+            <% end %>
+          </a>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const carousel = document.getElementById("discount-carousel")
+    const track = carousel.querySelector(".carousel-track")
+
+    let position = 0
+    let speed = 0.5
+    let isPaused = false
+
+    function animate() {
+      if (!isPaused) {
+        position -= speed
+        track.style.transform = `translateX(${position}px)`
+
+        // reset infinito
+        if (Math.abs(position) >= track.scrollWidth / 2) {
+          position = 0
+        }
+      }
+      requestAnimationFrame(animate)
+    }
+
+    carousel.addEventListener("mouseenter", () => {
+      isPaused = true
+    })
+
+    carousel.addEventListener("mouseleave", () => {
+      isPaused = false
+    })
+
+    animate()
+  })
+</script>

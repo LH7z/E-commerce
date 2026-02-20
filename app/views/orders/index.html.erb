@@ -1,0 +1,63 @@
+<h1>Pedidos Realizados</h1>
+
+<div class="grid" style="grid-template-columns: 1fr 1fr 1fr">
+  <% @orders.each do |order| %>
+      <div class="product-card expandable"  style="height:fit-content">
+        <div class="card-content">
+
+          <div class="parent">
+            <%if current_user.admin? %>
+              <p class="div1">Cliente: <strong><%= order.user.email %></strong> </p>
+              <p class="div1">Endereço: <strong><%= order.user.adress %></strong> </p>
+              <p class="div5">Numero: <strong><%= order.user.number %></strong> </p>
+              <p>Cep: <strong><%= order.user.cep %></strong> </p>
+              <p>Complemento: <strong><%= order.user.complement %></strong> </p>
+              <p class="div2">Cpf: <strong><%= order.user.cpf %></strong> </p>
+              <p>Telefone: <strong><%= order.user.telefone %></strong> </p>
+            <%end%>
+              <p class="div5" style="margin-top:20px">Numero do pedido: <%= order.id %></p>
+              <%if order.status == "paid" %>
+                <p class="div10" style="color:green; margin-top:20px;">Status do pedido: <%= order.status %></p>
+              <%elsif order.status == "canceled" %>
+                <p class="div10" style="color:red; margin-top:20px;">Status do pedido: <%= order.status %></p>
+              <%else%>
+                <p class="div10" style="color:purple; margin-top:20px;">Status do pedido: <%= order.status %></p>
+              <%end%>
+              <%order.order_items.each do |item| %>
+                <p>Item: <strong><%= item.product.name %></strong></p>
+                <p>Quantidade: <strong><%= item.quantity %></strong></p>
+                <p>Preço unitário:<strong><%= number_to_currency(item.product.price, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong></p>
+                <p>Desconto:<strong><%= item.product.discount%>%</strong></p>
+                <p class="div10">Preço com desconto: <strong><%= number_to_currency(item.product.discounted_price_cents / 100.0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong></p>
+                <p class="div1">Preço Total: <strong> <%= number_to_currency(item.product.discounted_price_cents / 100.0 * item.quantity, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong></p>
+              <% end %>
+              <p class="div1">Valor total: <strong>R$ <%= number_to_currency(order.total, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong></p>
+              <% if ["pending", "canceled"].include?(order.status) && order.user == current_user %>
+                <div class="actions">
+                  <%= button_to "Retomar Compra", checkout_stripe_path(order_id: order.id), method: :post, style: "background-color: #28a745; color: white; padding: 10px 15px; border-radius: 5px;", data: { turbo: false } %>
+                </div>
+              <% end %>
+              <button class="toggle-card">Ver mais</button>
+          </div>
+        </div>
+
+      </div>
+  <% end %>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".toggle-card").forEach(button => {
+      button.addEventListener("click", () => {
+        const card = button.closest(".product-card");
+
+        card.classList.toggle("expanded");
+
+        button.textContent =
+          card.classList.contains("expanded")
+            ? "Ver menos"
+            : "Ver mais";
+      });
+    });
+  });
+</script>

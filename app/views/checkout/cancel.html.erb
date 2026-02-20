@@ -1,0 +1,12 @@
+<h1>Coe chapa quente compra ai namoral!</h1>
+<p>Seu pedido <strong><%= @order.id %></strong></p>
+<p><strong><%= @order.products.map(&:name).join(", ") %></strong> foi cancelado com sucesso.</p>
+<% if ["pending", "canceled"].include?(@order.status) %>
+    <%= button_to "Retomar Compra", checkout_stripe_path(order_id: @order.id), method: :post, data: { turbo: false } %>
+  <% end %>
+<%# <%= button_to "Retorme a compra",
+      checkout_stripe_path(product_id: @order.product.id),
+      method: :post,
+      data: { turbo: false } %>
+      <br>
+<a href="/products">Voltar aos produtos</a>

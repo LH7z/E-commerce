@@ -1,0 +1,42 @@
+<section class="product-show">
+  <div class="product-show-grid">
+
+    <div class="product-image">
+      <% if @product.image.attached? %>
+        <%= image_tag @product.image, alt: @product.name %>
+      <% end %>
+    </div>
+
+    <div class="product-info">
+      <h1><%= @product.name %></h1>
+
+      <% if @product.discount > 0 %>
+        <p class="old-price">
+          <%= number_to_currency(@product.price, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+        </p>
+
+        <p class="price">
+          <%= number_to_currency(@product.discounted_price_cents / 100.0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+        </p>
+
+        <span class="badge">-<%= @product.discount %>%</span>
+      <% else %>
+        <p class="price">
+          <%= number_to_currency(@product.price, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+        </p>
+      <% end %>
+
+      <p class="description">
+        <%= @product.description %>
+      </p>
+
+      <div class="product-actions">
+        <%= button_to "Adicionar ao Carrinho",
+          cart_items_path(product_id: @product.id),
+          method: :post,
+          id: "buy-button"%>
+      </div>
+    </div>
+
+  </div>
+</section>

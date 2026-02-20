@@ -1,0 +1,9 @@
+<h1>Parabens! Sua compra foi realizada com sucesso!</h1>
+<%order = Order.find(params[:order_id])%>
+<p>Numero do pedido: <%= order.id %></p>
+<p>Status do pedido: <%= order.status %></p>
+<p>Valor total:<%= number_to_currency(order.total, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></p>
+
+
+<a href="<%= products_path %>">Voltar para a loja</a><br>
+<a href="<%= orders_path %>">veja os seus pedidos</a>

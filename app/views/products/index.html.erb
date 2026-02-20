@@ -1,0 +1,42 @@
+<h1>Produtos</h1>
+
+<div class="grid">
+  <% @products.each do |product| %>
+    <div class="product-card">
+      <a href="<%= product_path(product) %>">
+
+        <div>
+          <% if product.image.attached? %>
+            <%= image_tag product.image%>
+          <% else %>
+            <img src="<%= image_path('img-indisponivel.jpg') %>" alt="Imagem padrão do produto">
+          <% end %>
+        </div>
+        <div>
+          <h2><%= product.name %></h2>
+          <% if product.discount > 0 %>
+            <p style="text-decoration: line-through;padding: 0 0 0 5px;"><%= number_to_currency(product.price, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></p>
+            <p class="badge"><%= number_to_currency(product.discounted_price_cents / 100.0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></p>
+          <% else %>
+            <p><%= number_to_currency(product.price, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></p>
+          <% end %>
+        </div>
+
+        <div class="product-actions">
+          <%= button_to "Adicionar ao Carrinho",
+            cart_items_path(product_id: product.id),
+            method: :post,
+            class: "btn btn-outline btn-cart" %>
+          <%if current_user&.admin? %>
+            <%=button_to edit_product_path(product), method: :get,class: "btn-edit", style: "background-color: #007bff;" do %>
+              <i class="fa-solid fa-pen"></i>
+            <% end %>
+            <%=button_to  product, method: :delete, confirm: "Tem certeza?",class:"btn-delete", style: "background-color: #dc3545;" do %>
+              <i class="fa-solid fa-trash"></i>
+            <% end %>
+          <% end %>
+        </div>
+      </a>
+    </div>
+  <% end %>
+</div>

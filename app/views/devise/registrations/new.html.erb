@@ -1,0 +1,107 @@
+
+
+<div class="product-card" style="margin-top: 20px; width: 50%;">
+  <h2>Sign up</h2>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+
+    <div class="parent">
+      <%= render "devise/shared/error_messages",resource: resource %>
+      <div class="div1">
+        <%= f.label :email %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+      </div>
+
+      <div class="div2">
+        <%= f.label :cep, "CEP" %>
+        <%= f.text_field :cep %>
+      </div>
+
+      <div class="div6">
+        <%= f.label :number, "Número do endereço" %>
+        <%= f.text_field :number %>
+      </div>
+
+      <div class="div1">
+        <%= f.label :adress, "Endereço" %>
+        <%= f.text_field :adress %>
+      </div>
+
+      <div class="div1">
+        <%= f.label :complemento, "Complemento do endereço" %>
+        <span style="font-size: 12px; color: #666;font-style: italic;">
+            (opcional)
+          </span>
+        <%= f.text_field :complement %>
+      </div>
+
+      <div class="div5">
+        <%= f.label :cpf, "CPF" %>
+        <%= f.text_field :cpf %>
+      </div>
+
+      <div class="div6">
+        <%= f.label :telefone, "Telefone" %>
+        <%= f.text_field :telefone %>
+      </div>
+
+      <div class="div7">
+        <%= f.label :password %>
+          <% if @minimum_password_length %>
+            <span style="font-size: 12px; color: #666;font-style: italic;">
+              (mínimo de <%= @minimum_password_length %> caracteres)
+            </span>
+          <% end %>
+        <%= f.password_field :password, autocomplete: "new-password" %>
+      </div>
+
+      <div class="div8">
+        <%= f.label :password_confirmation %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+      </div>
+
+      <div class="div9">
+          <%= f.label :admin_code, "Código de administrador" %>
+          <span style="font-size: 12px; color: #666;font-style: italic;">
+            (opcional)
+          </span>
+        <%= f.password_field :admin_code %>
+      </div>
+      <div class="actions">
+        <%= f.submit "Sign up" , style: "font-size: large;background-color: var(--verde); color: white; width: 25%;"%>
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
+
+
+  <% end %>
+
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const cep = document.querySelector("#user_cep");
+    const adress = document.querySelector("#user_adress");
+    if (!cep) return;
+    cep.addEventListener("blur", function() {
+      const cep = this.value.replace(/\D/g, "");
+      if (cep.length !== 8) return;
+
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+
+        .then(res => res.json())
+        .then(data => {
+          if (data.erro) {
+            alert("CEP não encontrado");
+            return;
+          }
+          adress.value = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
+          document.getElementById("user_number").focus();
+        })
+        .catch(err => {
+          console.error("Erro ao buscar CEP:", err);
+          alert("Erro ao buscar CEP. Por favor, tente novamente.");
+        });
+    });
+  });
+</script>

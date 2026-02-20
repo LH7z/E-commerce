@@ -1,0 +1,41 @@
+<h1>Carrinho</h1>
+  <%if @cart.cart_items.empty? %>
+    <h3>Seu carrinho está vazio.</h3>
+  <% else %>
+    <div class="product-card">
+      <div class="grid">
+        <% @cart.cart_items.each do |item| %>
+          <div class="product-card">
+            <div id="img-card">
+              <% if item.product.image.attached? %>
+                <%= image_tag item.product.image %>
+              <% end %>
+            </div>
+            <div style="display: flex;gap: 10px;align-items: center;">
+              <strong><%= item.product.name %></strong>
+              <%= button_to "-", decrease_cart_item_path(item), method: :post , style: "color: black;" %>
+              <div id="quantity">
+                <%= item.quantity %>
+              </div>
+              <%= button_to "+", increase_cart_item_path(item), method: :post, style: "color: black;" %>
+              <p>
+                Subtotal: <strong><%= number_to_currency(item.subtotal, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+              </p>
+            </div>
+          </div>
+        <% end %>
+        <div class="cart-total">
+          <h2>
+            Total:
+            <%= number_to_currency(@cart.total_cents / 100.0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+          </h2>
+        </div>
+
+        <div class="cart-checkout">
+          <%= button_to "Esvaziar carrinho", cart_path, method: :delete, style: "color:white;background-color: #dc3545;" %>
+          <%= button_to "Finalizar compra", checkout_stripe_path, method: :post, style: "color:white;" %>
+        </div>
+      </div>
+
+    </div>
+  <% end %>
