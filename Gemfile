@@ -77,3 +77,6 @@ gem "faraday", "~> 2.14"
 gem "cloudinary"
 
 gem "devise"
+
+
+gem 'cgi', '>= 0.3.3'
