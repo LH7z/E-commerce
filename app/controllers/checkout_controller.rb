@@ -15,6 +15,7 @@ def create
       order.order_items.create!(
         product: item.product,
         quantity: item.quantity,
+        variant: item.variant,
         price: item.product.discounted_price_cents,
         discount: item.product.discount
       )

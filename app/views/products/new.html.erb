@@ -25,7 +25,59 @@
         <%= form.label :disconto, style: "font-weight: bold;" %>
         <%= form.number_field :discount, step: 1.0, min: 0, max: 100 %>
       </div>
+      <div class="div3" id="variants-container">
 
+        <%= form.fields_for :variants do |variant_form| %>
+
+          <div class="variant-row">
+
+            <%= variant_form.hidden_field :id %>
+
+            <%= variant_form.hidden_field :_destroy, class: "destroy-variant" %>
+
+            <%= variant_form.text_field :size,
+                placeholder: "Tamanho",
+                class: "variant-input" %>
+
+            <%= variant_form.number_field :stock,
+                placeholder: "Estoque",
+                min: 0,
+                class: "variant-input" %>
+
+            <% if variant_form.object.persisted? && variant_form.object.used? %>
+            <% else %>
+              <button type="button" class="remove-variant">🗑</button>
+            <% end %>
+          </div>
+
+        <% end %>
+
+      </div>
+      <button class="div2" type="button" id="add-variant">+ Adicionar tamanho</button>
+      <template class="div1" id="variant-template">
+
+        <div class="variant-row">
+
+          <input type="text"
+                name="product[variants_attributes][NEW_RECORD][size]"
+                placeholder="Tamanho"
+                class="variant-input">
+
+          <input type="number"
+                name="product[variants_attributes][NEW_RECORD][stock]"
+                placeholder="Estoque"
+                min="0"
+                class="variant-input">
+
+          <button type="button" class="remove-variant">🗑</button>
+
+        </div>
+
+      </template>
+      <div class="div1">
+        <%= form.label :Descrição, style: "font-weight: bold;" %>
+        <%= form.text_area :description, rows: 3 %>
+      </div>
       <div class="div1">
         <%= form.label :imagem, style: "font-weight: bold;" %>
         <%= form.file_field :image %>
@@ -38,3 +90,41 @@
 
 
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+  const container = document.getElementById("variants-container")
+  const addButton = document.getElementById("add-variant")
+  const template = document.getElementById("variant-template").innerHTML
+
+  addButton.addEventListener("click", () => {
+
+    const uniqueId = new Date().getTime()
+
+    const newRow = template.replace(/NEW_RECORD/g, uniqueId)
+
+    container.insertAdjacentHTML("beforeend", newRow)
+
+  })
+
+  container.addEventListener("click", (e) => {
+
+    if (e.target.classList.contains("remove-variant")) {
+
+      const row = e.target.closest(".variant-row")
+
+      const destroyField = row.querySelector(".destroy-variant")
+
+      if (destroyField) {
+        destroyField.value = "1"
+        row.style.display = "none"
+      } else {
+        row.remove()
+      }
+
+    }
+
+  })
+
+})
+</script>

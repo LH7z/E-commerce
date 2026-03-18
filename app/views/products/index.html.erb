@@ -24,8 +24,8 @@
 
         <div class="product-actions">
           <%= button_to "Adicionar ao Carrinho",
-            cart_items_path(product_id: product.id),
-            method: :post,
+            product_path(product),
+            method: :get,
             class: "btn btn-outline btn-cart" %>
           <%if current_user&.admin? %>
             <%=button_to edit_product_path(product), method: :get,class: "btn-edit", style: "background-color: #007bff;" do %>

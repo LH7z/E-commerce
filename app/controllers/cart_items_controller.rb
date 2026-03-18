@@ -3,11 +3,12 @@ class CartItemsController < ApplicationController
 def create
   cart = current_user.cart || current_user.create_cart
 
-  item = cart.cart_items.find_or_initialize_by(product_id: params[:product_id])
+  item = cart.cart_items.find_or_initialize_by(product_id: params[:product_id], variant_id: params[:variant_id])
   item.quantity ||= 0
   item.quantity += 1
+  item.product = Product.find(params[:product_id])
+  item.variant = Variant.find(params[:variant_id])
   item.save!
-
   redirect_to cart_path
 end
 
@@ -18,7 +19,11 @@ end
 
   def increase
     item = CartItem.find(params[:id])
-    item.increment!(:quantity)
+    if item.variant.stock > item.quantity
+      item.increment!(:quantity)
+    else
+      flash[:alert] = "Não há estoque suficiente para aumentar a quantidade."
+    end
     redirect_to cart_path
   end
 

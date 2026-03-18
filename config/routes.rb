@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get '/stock', to: 'stock#index'
+  resources :stock, only: [:update]
+  
   root to: 'home#index'
   devise_for :users
 

@@ -1,0 +1,74 @@
+<h1>Controle de Estoque</h1>
+
+<table class="stock-table">
+  <thead>
+    <tr>
+      <th>Produto</th>
+      <th>Preço</th>
+      <th>Tamanho</th>
+      <th>Estoque</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @products.each do |product| %>
+      <tr>
+        <td><%= product.name %></td>
+
+        <td>
+          <%= number_to_currency(product.price, unit: "R$ ") %>
+        </td>
+        <td>
+          <% product.variants.each do |variant| %>
+            <p><%= variant.size %></p>
+          <% end %>
+        </td>
+          <td>
+            <% product.variants.each do |variant| %>
+              <p>
+                <input
+                type="number"
+                class="stock-input"
+                value="<%= variant.stock %>"
+                data-variant-id="<%= variant.id %>"
+                min="0"
+                >
+              </p>
+
+            <% end %>
+          </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<script>
+document.querySelectorAll(".stock-input").forEach(input => {
+
+  input.addEventListener("change", async () => {
+
+    const variantId = input.dataset.variantId
+    console.log(input)
+    console.log("Variant ID:", variantId)
+    const stock = input.value
+
+    const response = await fetch(`/stock/${variantId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document.querySelector("[name='csrf-token']").content
+      },
+      body: JSON.stringify({ stock: stock })
+    })
+
+    if (response.ok) {
+      input.style.borderColor = "#28a745"
+      setTimeout(() => input.style.borderColor = "", 2000)
+    } else {
+      input.style.borderColor = "red"
+    }
+
+  })
+
+})
+</script>

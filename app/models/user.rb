@@ -28,7 +28,6 @@ class User < ApplicationRecord
     secret_email = Rails.application.credentials.dig(:admin, :admin_email)
 
     if self.admin_code.present? && (admin_code != secret_code || self.email != secret_email)
-      raise
       errors.add(:admin_code, "Código inválido ou email não autorizado para registro como administrador.")
       throw :abort
     else

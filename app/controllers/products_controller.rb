@@ -26,7 +26,6 @@ class ProductsController < ApplicationController
   end
 
   def update
-
     @product = Product.find(params[:id])
     if @product.update(product_params)
       redirect_to products_path, notice: "Produto atualizado com sucesso."
@@ -44,6 +43,6 @@ class ProductsController < ApplicationController
   private
 
   def product_params
-    params.require(:product).permit(:name, :price,:discount , :image)
+    params.require(:product).permit(:name, :price,:discount, :stock, :description, :image, variants_attributes: [:id, :size, :stock, :_destroy])
   end
 end

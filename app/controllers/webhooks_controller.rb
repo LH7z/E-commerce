@@ -18,7 +18,7 @@ class WebhooksController < ApplicationController
 
       order = Order.find(session.metadata.order_id)
 
-      order.update!(status: "paid")
+      order.update(status: "paid")
 
       # limpa o carrinho após pagamento
       order.user.cart.cart_items.destroy_all
