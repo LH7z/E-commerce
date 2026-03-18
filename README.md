@@ -5,6 +5,9 @@
 Aplicação web desenvolvida com Ruby on Rails que simula um fluxo completo de compra online, incluindo criação de pedidos, integração com Stripe Checkout e confirmação de pagamento.
 
 ---
+## 🚀 Demostraçao
+https://www.loom.com/share/61769564bca24be0913a3a419058cf66
+
 
 ## 🧠 Sobre o Projeto
 
