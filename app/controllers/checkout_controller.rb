@@ -41,8 +41,8 @@ def create
     line_items: line_items,
     mode: "payment",
     metadata: { order_id: order.id },
-    success_url: success_url(order_id: order.id),
-    cancel_url: cancel_url(order_id: order.id)
+    success_url: "https://e-commerce-563f.onrender.com?order_id=#{order.id}",
+    cancel_url: "https://e-commerce-563f.onrender.com/checkout/cancel?order_id=#{order.id}",
   )
 
   redirect_to session.url, allow_other_host: true
@@ -50,6 +50,7 @@ end
 
 
   def success
+
   end
 
   def cancel
